@@ -1,3 +1,4 @@
 module.exports = {
-    ttFolder:   'timetables'
+    ttFolder: 'timetables',
+    generatedTTFolder: './generated',
 }
