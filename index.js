@@ -88,47 +88,25 @@ const generateClassWiseTT = () => {
 const coTeachersCWTT = {};
 const generateTTWithMaxUtilOfTeachers = () => {
 
-    /*// assigns free teachers to free classes.
+    // assigns free teachers as co teachers.
     classes.forEach(std => {
         days.forEach(day => {
             times.forEach(time => {
                 const teacher = timetable[std][day][time];
-                if (!teacher) {
+                if (!coTeachersCWTT[std]) coTeachersCWTT[std] = {};
+                if (!coTeachersCWTT[std][day]) coTeachersCWTT[std][day] = {};
+                const coTeacher = coTeachersCWTT[std][day][time];
+                if (!coTeacher) {
                     teachers.find(t => {
+                        if (t === teacher) return false;
                         if (!teachersTT[t][day][time]) {
-                            timetable[std][day][time] = t;
+                            coTeachersCWTT[std][day][time] = t;
                             teachersTT[t][day][time] = std;
                             return true;
                         }
                         return false;
                     })
                 }
-            })
-        })
-    })*/
-
-    // assigns free teachers as co teachers.
-    classes.forEach(std => {
-        days.forEach(day => {
-            times.forEach(time => {
-                const teacher = timetable[std][day][time];
-                // only assigns as 'co' teachers
-                // if (teacher) {
-                    if (!coTeachersCWTT[std]) coTeachersCWTT[std] = {};
-                    if (!coTeachersCWTT[std][day]) coTeachersCWTT[std][day] = {};
-                    const coTeacher = coTeachersCWTT[std][day][time];
-                    if (!coTeacher) {
-                        teachers.find(t => {
-                            if (t === teacher) return false;
-                            if (!teachersTT[t][day][time]) {
-                                coTeachersCWTT[std][day][time] = t;
-                                teachersTT[t][day][time] = std;
-                                return true;
-                            }
-                            return false;
-                        })
-                    }
-                // }
             })
         })
     })
@@ -140,17 +118,6 @@ const generateTTWithMaxUtilOfTeachers = () => {
 
     // writes the class wise timeTables
     classes.forEach(std => {
-
-        /*// creates the csv
-        let data = '--,' + days.join(',') + '\r\n';
-        data += times.map(time => {
-            return time + ',' + days.map(day => timetable[std][day][time] || '').join(',');    
-        }).join('\r\n');
-
-        // writes into the file
-        fs.writeFile(`./${CONFIG.generatedTTFolder}/2/new-${std}.csv`, data, (err) => {
-            if (err) console.log(err)
-        });*/
 
         // creates the csv for the co-teachers.
         data = '--,' + days.join(',') + '\r\n';
@@ -189,7 +156,6 @@ const calculateMinimumExtraCoTeachers = () => {
         times.forEach(time => {
             let countForTime = 0;
             classes.forEach(std => {
-                // if (!timetable[std][day][time]) countForTime++;
                 if (!coTeachersCWTT[std][day][time]) countForTime++;
             })
             if (countForTime > count) count = countForTime;
