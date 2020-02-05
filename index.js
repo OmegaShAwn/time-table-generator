@@ -18,10 +18,13 @@ const recordTimeTable = (file) => {
     teachers.push(teacher);
 
     file = __dirname + '\\' + CONFIG.ttFolder + '\\' + file;
+    console.log(`Reading file ${file} ....`);
+
     return new Promise((resolve, reject) => {
         fs.readFile(file, 'utf8', (err, contents) => {
             if (err) reject();
 
+            if (!contents) throw 'The file address is invalid.'
             const lines = contents.split('\r\n');
             
             // prevents fetching the date each iteration.
