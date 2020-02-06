@@ -17,7 +17,7 @@ const recordTimeTable = (file) => {
 
     teachers.push(teacher);
 
-    file = __dirname + '\\' + CONFIG.ttFolder + '\\' + file;
+    file = __dirname + '/' + CONFIG.ttFolder + '/' + file;
     console.log(`Reading file ${file} ....`);
 
     return new Promise((resolve, reject) => {
