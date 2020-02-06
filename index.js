@@ -1,6 +1,7 @@
 const CONFIG = require('./config');
 const path = require('path');
 const fs = require('fs');
+var eol = require('os').EOL;
 
 // variables to record the timetables into.
 const timetable = {};
@@ -25,7 +26,7 @@ const recordTimeTable = (file) => {
             if (err) reject();
 
             if (!contents) throw 'The file address is invalid.'
-            const lines = contents.split('\r\n');
+            const lines = contents.split(eol);
             
             // prevents fetching the date each iteration.
             if (days.length === 0) {
@@ -75,10 +76,10 @@ const generateClassWiseTT = () => {
     classes.forEach(std => {
 
         // creates the csv
-        let data = '--,' + days.join(',') + '\r\n';
+        let data = '--,' + days.join(',') + eol;
         data += times.map(time => {
             return time + ',' + days.map(day => timetable[std][day][time] || '').join(',');    
-        }).join('\r\n');
+        }).join(eol);
 
         // writes into the file
         fs.writeFile(`${CONFIG.generatedTTFolder}/1/${std}.csv`, data, (err) => {
@@ -123,10 +124,10 @@ const generateTTWithMaxUtilOfTeachers = () => {
     classes.forEach(std => {
 
         // creates the csv for the co-teachers.
-        data = '--,' + days.join(',') + '\r\n';
+        data = '--,' + days.join(',') + eol;
         data += times.map(time => {
             return time + ',' + days.map(day => coTeachersCWTT[std][day][time] || '').join(',');    
-        }).join('\r\n');
+        }).join(eol);
 
         // writes into the file
         fs.writeFile(`./${CONFIG.generatedTTFolder}/2/co-${std}.csv`, data, (err) => {
@@ -138,10 +139,10 @@ const generateTTWithMaxUtilOfTeachers = () => {
     teachers.forEach(teacher => {
 
         // creates the csv
-        let data = '--,' + days.join(',') + '\r\n';
+        let data = '--,' + days.join(',') + eol;
         data += times.map(time => {
             return time + ',' + days.map(day => teachersTT[teacher][day][time] || '').join(',');    
-        }).join('\r\n');
+        }).join(eol);
 
         // writes into the file
         fs.writeFile(`./${CONFIG.generatedTTFolder}/2/new-${teacher}.csv`, data, (err) => {
